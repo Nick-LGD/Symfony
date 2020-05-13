@@ -1,5 +1,6 @@
 <?php
-// src/Controller/WildController.php
+
+
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -9,11 +10,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class DefaultController extends AbstractController
 {
     /**
-     * @Route("/", name="app_index")
+     * @Route("/", name="wild_index")
      */
-    public function index() :Response
+    public function index() : Response
     {
-        return $this->render('wild/index.html.twig');
-
+        return $this->render('wild/index.html.twig', [
+            'welcome' => 'Bienvenue sur Wild Series !',
+        ]);
     }
 }
