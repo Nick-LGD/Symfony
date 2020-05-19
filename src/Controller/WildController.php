@@ -2,6 +2,8 @@
 // src/Controller/WildController.php
 namespace App\Controller;
 
+use App\Entity\Program;
+use App\Entity\Category;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -9,28 +11,92 @@ use Symfony\Component\Routing\Annotation\Route;
 class WildController extends AbstractController
 {
     /**
-     * @Route("/wild", name="app_index")
+     * Show all rows from Program’s entity
+     *
+     * @Route("/", name="wild_index")
+     * @return Response A response instance
      */
     public function index(): Response
     {
+        $programs = $this->getDoctrine()
+            ->getRepository(Program::class)
+            ->findAll();
 
-        return $this->render('wild/index.html.twig');
+        if (!$programs) {
+            throw $this->createNotFoundException(
+                'No program found in program\'s table.'
+            );
+        }
+
+        return $this->render(
+            'wild/index.html.twig',
+            ['programs' => $programs]
+        );
     }
+
+    /**
+     * Show all rows from Program’s entity
+     *
+     * @Route("wild/category/{categoryName}", name="show_category")
+     * @param string $categoryName
+     * @return Response A response instance
+     */
+    public function showByCategory(string $categoryName)
+    {
+        $category = $this->getDoctrine()
+            ->getRepository(Category::class)
+            ->findOneBy(['name' => mb_strtolower($categoryName)]);
+        $program = $this->getDoctrine()
+            ->getRepository(Program::class)
+            ->findBy(['category'=> $category], ['id' => 'DESC'], 3);
+
+        if (!$category) {
+            throw $this->createNotFoundException(
+                'No program with '.$categoryName.' title, found in program\'s table.'
+            );
+        }
+
+        return $this->render('wild/category.html.twig', [
+            'program' => $program,
+            'categoryName' => $categoryName,
+
+        ]);
+    }
+
 
 
     /**
+     * Getting a program with a formatted slug for title
+     *
      * @param string $slug The slugger
-     * @Route("wild/show/{slug}", requirements={"slug"="[a-z0-9-]+$"}, defaults={"slug" = null}, name="wild_show_slug")
+     * @Route("/show/{slug<^[a-z0-9-]+$>}", defaults={"slug" = null}, name="show")
      * @return Response
      */
-    public function show(?string $slug): Response
+    public function show(?string $slug):Response
     {
-        $slugWithoutDash = str_replace("-", " ", $slug);
-        $slugInMag = ucwords($slugWithoutDash);
+        if (!$slug) {
+            throw $this
+                ->createNotFoundException('No slug has been sent to find a program in program\'s table.');
+        }
+        $slug = preg_replace(
+            '/-/',
+            ' ', ucwords(trim(strip_tags($slug)), "-")
+        );
+        $program = $this->getDoctrine()
+            ->getRepository(Program::class)
+            ->findOneBy(['title' => mb_strtolower($slug)]);
+        if (!$program) {
+            throw $this->createNotFoundException(
+                'No program with '.$slug.' title, found in program\'s table.'
+            );
+        }
+
         return $this->render('wild/show.html.twig', [
-            'slug' => $slugInMag
-
+            'program' => $program,
+            'slug'  => $slug,
         ]);
-
     }
+
+
+
 }

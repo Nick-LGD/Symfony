@@ -1,5 +1,31 @@
-{% extends "base.html.twig" %}
+{% extends 'base.html.twig' %}
+
+{% block title %}All programs{% endblock %}
 
 {% block body %}
-    <h1>{{ welcome }}</h1>
+    <h1>Toutes les séries de la table program : </h1>
+    {% for program in programs %}
+        <div class="card" style="width: 28rem;">
+            <div class="card-body">
+                <a href="/wild/show/program/{{ program.title|lower|replace({' ': '-'}) }}">
+                    <h5 class="card-title">{{ loop.index }} / {{ program.title }}</h5>
+                </a>
+                <h6 class="card-subtitle mb-2 text-muted">Catégorie : {{ program.category.name }}</h6>
+                <p class="card-text">{{ program.summary }}</p>
+            </div>
+        </div>
+    {% else %}
+        Aucune série trouvée.
+    {% endfor %}
+    <a href="{{ path('wild_index') }}">
+        Retour à l'accueil
+    </a>
+    {# templates/index.html.twig #}
+    Testing show() method from WildController with a real program s slug.
+    </a>
+    <br>
+    <a href="{{ path('wild_index') }}">
+        Testing index() method from WildController to view all programs.
+    </a>
+
 {% endblock %}
