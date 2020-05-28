@@ -72,10 +72,12 @@ class WildController extends AbstractController
             ['programs' => $programs]
         );
     }
+
     /**
      * Show all rows from Program’s entity
      *
      * @Route("/category/{categoryName}", name="show_category")
+     * @param string $categoryName
      * @return Response A response instance
      */
     public function showByCategory(string $categoryName)
@@ -149,8 +151,11 @@ class WildController extends AbstractController
         ]);
 
     }
+
     /**
      * @Route("/show/program/episode/{id}")
+     * @param Episode $episode
+     * @return Response
      */
     public function showEpisode(Episode $episode): Response
     {
@@ -160,6 +165,18 @@ class WildController extends AbstractController
             'season' => $season,
             'program' => $program,
             'episode' => $episode,
+        ]);
+    }
+    /**
+     * @Route("/show/categoryName/")
+     */
+    public function showCategory() :Response
+    {
+        $categories = $this->getDoctrine()
+            ->getRepository(Category::class)
+            ->findAll();
+        return $this->render('wild/show_category.html.twig', [
+            'category' => $categories,
         ]);
     }
 }

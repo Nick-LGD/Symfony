@@ -11,7 +11,6 @@ body {
 .link-navbar {
     color: white;
 }
-
 .box-title-serie-one {
     text-align: center;
     margin: 4em;
@@ -29,4 +28,13 @@ body {
 }
 .episode-list {
     margin-left: 4em;
+}
+.text-syno {
+    font-size: 0.8em;
+    margin-right: 2em;
+    margin-left: 2em;
+}
+.box-form-category {
+    margin-top: 5em;
+    padding-left: 8em;
 }
