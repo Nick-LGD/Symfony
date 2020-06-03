@@ -34,7 +34,7 @@ class SeasonController extends AbstractController
         $form = $this->createForm(SeasonType::class, $season);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($season);
             $entityManager->flush();
@@ -66,7 +66,7 @@ class SeasonController extends AbstractController
         $form = $this->createForm(SeasonType::class, $season);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('season_index');
