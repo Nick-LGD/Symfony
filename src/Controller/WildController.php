@@ -2,6 +2,7 @@
 // src/Controller/WildController.php
 namespace App\Controller;
 
+use App\Entity\Actor;
 use App\Entity\Category;
 use App\Entity\Episode;
 use App\Entity\Program;
@@ -72,12 +73,10 @@ class WildController extends AbstractController
             ['programs' => $programs]
         );
     }
-
     /**
      * Show all rows from Program’s entity
      *
      * @Route("/category/{categoryName}", name="show_category")
-     * @param string $categoryName
      * @return Response A response instance
      */
     public function showByCategory(string $categoryName)
@@ -151,11 +150,8 @@ class WildController extends AbstractController
         ]);
 
     }
-
     /**
      * @Route("/show/program/episode/{id}")
-     * @param Episode $episode
-     * @return Response
      */
     public function showEpisode(Episode $episode): Response
     {
@@ -177,6 +173,23 @@ class WildController extends AbstractController
             ->findAll();
         return $this->render('wild/show_category.html.twig', [
             'category' => $categories,
+        ]);
+    }
+
+    /**
+     * @Route("/actor/{id}")
+     * @param int $id
+     * @return Response
+     */
+    public function showActor(int $id) :Response
+    {
+        $actors = $this->getDoctrine()
+            ->getRepository(Actor::class)
+            ->findOneBy(['id' =>$id]);
+        $serie = $actors->getPrograms();
+        return $this->render('wild/show_actor.html.twig', [
+            'actor' => $actors,
+            'program' => $serie,
         ]);
     }
 }

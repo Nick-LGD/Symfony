@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 {% block title %}{{ categoryName }}{% endblock %}
 {% block body %}
-    {% for series in program %}
+    {% for programs in program %}
         <ul>
-            <li>{{ series.id }}</li>
-            <li>{{ series.title }}</li>
-            <li>{{ series.summary }}</li>
+            <li>{{ program.id }}</li>
+            <li>{{ program.title }}</li>
+            <li>{{ program.summary }}</li>
         </ul>
     {% endfor %}
 {% endblock %}
